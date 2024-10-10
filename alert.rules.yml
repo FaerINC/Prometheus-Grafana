@@ -1,0 +1,47 @@
+groups:
+- name: availability_alerts
+  rules:
+  - alert: WebsiteDown
+    expr: probe_success == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Сайт site.aleksandrfaer.ru недоступен"
+      description: "Сайт не отвечает в течение 1 минуты."
+
+  - alert: HighCPUUsage
+    expr: node_cpu_seconds_total{instance="site.aleksandrfaer.ru"} > 80
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Высокая загрузка процессора на сайте"
+      description: "Использование CPU превысило 80% в течение 2 минут."
+
+  - alert: HighMemoryUsage
+    expr: node_memory_Active_bytes{instance="site.aleksandrfaer.ru"} / node_memory_MemTotal_bytes{instance="site.aleksandrfaer.ru"} > 0.9
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Высокое использование памяти на сайте"
+      description: "Использование памяти превысило 90% в течение 2 минут."
+
+  - alert: MySQLDown
+    expr: mysql_up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "База данных MySQL недоступна"
+      description: "База данных MySQL на сайте не отвечает в течение 1 минуты."
+
+  - alert: SlowDatabase
+    expr: rate(mysql_global_status_slow_queries[5m]) > 0
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "База данных медленно отвечает"
+      description: "Замечены медленные запросы на базе данных в течение 5 минут."

@@ -1,0 +1,62 @@
+
+
+
+sudo apt update && sudo apt upgrade -y
+sudo apt install nginx -y
+sudo systemctl start nginx
+sudo systemctl enable nginx
+sudo apt install mariadb-server -y
+sudo apt install mariadb-client -y
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+sudo mysql_secure_installation
+
+
+
+
+БД admin 12w234r4
+
+Имя сайта Aleksandr Faer
+user alexfaer
+pass bOZbwiYV*JmrTWGsXJ
+
+htpasswd admin\12w234r4
+
+
+
+
+sudo apt install php-fpm php-mysql php-gd php-xml php-mbstring php-curl php-zip -y
+cd /var/www/
+sudo wget https://wordpress.org/latest.tar.gz
+sudo tar -xvzf latest.tar.gz
+sudo rm latest.tar.gz
+sudo chown -R www-data:www-data /var/www/wordpress
+sudo nano /etc/nginx/sites-available/wordpress
+
+server {
+    listen 80;
+    server_name 81.31.246.122;
+    root /var/www/wordpress;
+
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+
+sudo ln -s /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+

@@ -1,25 +1,16 @@
-# my global config
 global:
-  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
-  # scrape_timeout is set to the global default (10s).
+  scrape_interval: 15s # Интервал опроса всех целей по умолчанию
+  evaluation_interval: 15s # Интервал для правил оценки
 
-# Alertmanager configuration
 alerting:
   alertmanagers:
-  - static_configs:
-    - targets:
-      - localhost:9093  # Адрес вашего Alertmanager        # - alertmanager:9093
+    - static_configs:
+        - targets:
+          - "localhost:9093"
 
-# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
-  - /etc/prometheus/rules/test_alert.yml
-  - /etc/prometheus/alert.rules.yml
-  # - "first_rules.yml"
-  # - "second_rules.yml"
+  - "/etc/prometheus/alert.rules.yml"
 
-# A scrape configuration containing exactly one endpoint to scrape:
-# Here it's Prometheus itself.
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
@@ -27,19 +18,23 @@ scrape_configs:
 
   - job_name: 'node_exporter'
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ['89.169.133.88:9100']
+
+  - job_name: 'mysql_exporter'
+    static_configs:
+      - targets: ['89.169.133.88:9104']
 
   - job_name: 'blackbox'
     metrics_path: /probe
     params:
-      module: [http_2xx]  # Выбираем модуль для проверки
+      module: [http_2xx]
     static_configs:
       - targets:
-        - http://example.com   # Адрес сайта для проверки
+          - http://site.aleksandrfaer.ru
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - target_label: instance
-        replacement: example.com
+        replacement: site.aleksandrfaer.ru
       - target_label: __address__
-        replacement: localhost:9115  # Адрес Blackbox Exporter
+        replacement: localhost:9115  # Укажите правильный IP

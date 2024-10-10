@@ -1,0 +1,18 @@
+#commands for install Grafana
+
+# установим керл для добавления ключа и установка графаны
+
+sudo apt-get update
+sudo apt-get install -y curl
+curl -fsSL https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /usr/share/keyrings/grafana-archive-keyring.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/grafana-archive-keyring.gpg] https://apt.grafana.com stable main" | sudo tee /etc/apt/sources.list.d/grafana.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y Grafana
+
+# запускаем и включаем графану http://your_server_ip:3000 вход admin admin
+
+sudo systemctl start grafana-server
+sudo systemctl enable grafana-server
+sudo systemctl status grafana-server
+ 
+
